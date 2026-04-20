@@ -1,0 +1,20 @@
+-- ==========================================
+-- STEP 3: Create Admin User (Optional)
+-- Run this to create admin account
+-- ==========================================
+-- Note: Supabase Auth manages users internally
+-- This is done via Dashboard, not SQL
+-- ==========================================
+
+-- ⚠️ ADMIN USER CREATION IS DONE VIA DASHBOARD
+-- 
+-- Steps:
+-- 1. Go to: https://supabase.com/dashboard/project/sjmmvksyesuidgxkumbr/auth/users
+-- 2. Click "Add user"
+-- 3. Enter email: admin@joyfulhub.com
+-- 4. Enter password: Admin@123456
+-- 5. Click "Create user"
+--
+-- That's it! The user is now created in Supabase's internal auth system.
+-- You can now login at: http://localhost:5173/login
+-- ==========================================
