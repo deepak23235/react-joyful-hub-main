@@ -4,8 +4,6 @@ set -e  # Exit on any error
 
 echo "🚀 Starting deployment..."
 
-# Go to your project directory
-cd /home/deploy/yourrepo
 
 echo "📥 Pulling latest code..."
 git pull origin main
