@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, } from "react";
 import AdminLayout from "@/components/AdminLayout";
 import { fetchAreas, createArea, updateArea, deleteArea, fetchLocations } from "@/lib/store";
 import { Area, Location } from "@/types";
@@ -9,6 +9,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Plus, Pencil, Trash2, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import slugify from "slugify"
+
+
 
 const emptyArea = (): Omit<Area, "id"> => ({ locationId: "", name: "", slug: "", image: "", description: "" });
 
@@ -20,6 +23,7 @@ const AdminAreas = () => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+;
 
   useEffect(() => {
     loadData();
@@ -43,14 +47,15 @@ const AdminAreas = () => {
 
   const save = async () => {
     if (!form.name || !form.slug || !form.locationId) { toast.error("All fields required"); return; }
-    
+   
     setSaving(true);
+    
     try {
       if (editing) {
-        await updateArea(editing.id, form);
+        await updateArea(editing.id, {...form,image:""});
         toast.success("Area updated");
       } else {
-        await createArea(form);
+        await createArea({...form,image:""});
         toast.success("Area added");
       }
       setOpen(false);
@@ -90,7 +95,9 @@ const AdminAreas = () => {
     setOpen(true);
   };
 
-  const autoSlug = (name: string) => name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+
+
+
   const locName = (id: string) => locations.find(l => l.id === id)?.name || "—";
 
   if (loading) {
@@ -116,9 +123,7 @@ const AdminAreas = () => {
                 <SelectTrigger><SelectValue placeholder="Select Location" /></SelectTrigger>
                 <SelectContent>{locations.map(l => <SelectItem key={l.id} value={l.id}>{l.name}</SelectItem>)}</SelectContent>
               </Select>
-              <Input placeholder="Name" value={form.name} onChange={e => setForm(p => ({ ...p, name: e.target.value, slug: editing ? p.slug : autoSlug(e.target.value) }))} />
-              <Input placeholder="Slug" value={form.slug} onChange={e => setForm(p => ({ ...p, slug: e.target.value }))} />
-              <Input placeholder="Image URL" value={form.image} onChange={e => setForm(p => ({ ...p, image: e.target.value }))} />
+              <Input  placeholder="Name" value={form.name} onChange={e => setForm(p => ({ ...p, name: e.target.value, slug: editing ? p.slug : slugify(e.target.value) }))} />
               <Textarea placeholder="Description" value={form.description} onChange={e => setForm(p => ({ ...p, description: e.target.value }))} />
               <Button onClick={save} className="w-full" disabled={saving}>
                 {saving ? <><Loader2 className="h-4 w-4 animate-spin mr-2" /> Saving...</> : editing ? "Update" : "Add"} Area

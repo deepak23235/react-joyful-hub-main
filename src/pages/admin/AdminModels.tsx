@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import AdminLayout from "@/components/AdminLayout";
 import { fetchModels, createModel, updateModel, deleteModel, fetchAreas, fetchLocations } from "@/lib/store";
 import { Model, Area, Location } from "@/types";
@@ -9,6 +9,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Plus, Pencil, Trash2, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { uploadFilesAndGetUrls } from "@/lib/utils";
+import slugify from "slugify"
+import ImagePreviewList, { ItemType } from "@/components/ImagePreviewList";
 
 const emptyModel = (): Omit<Model, "id"> => ({
   areaId: "", name: "", slug: "", image: "", images: [], shortDescription: "", description: "", phoneNumber: "", features: [], specifications: {},
@@ -25,6 +28,9 @@ const AdminModels = () => {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [selectedUploads,setSelectedUploads] = useState<FileList|[]>([]) 
+  const inputRef = useRef<HTMLInputElement>(null)
+
 
   useEffect(() => {
     loadData();
@@ -59,7 +65,11 @@ const AdminModels = () => {
 
   const save = async () => {
     if (!form.name || !form.slug || !form.areaId) { toast.error("Name, slug and area required"); return; }
-    
+    let urls:string[] =[]
+ 
+    if (selectedUploads.length) {
+      urls = await uploadFilesAndGetUrls(selectedUploads);
+    }
     setSaving(true);
     try {
       const features = featuresStr.split(",").map(f => f.trim()).filter(Boolean);
@@ -68,11 +78,9 @@ const AdminModels = () => {
         const [k, v] = pair.split(":").map(s => s.trim());
         if (k && v) specifications[k] = v;
       });
-      const images = form.image ? [form.image] : [];
-      const final = { ...form, features, specifications, images };
-
+      const final = { ...form, features, specifications, images:urls };
       if (editing) {
-        await updateModel(editing.id, final);
+        await updateModel(editing.id, {...final,images:[...form.images,...urls]});
         toast.success("Model updated");
       } else {
         await createModel(final);
@@ -121,12 +129,31 @@ const AdminModels = () => {
     setOpen(true);
   };
 
-  const autoSlug = (name: string) => name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+  const handleFileChange = (e:React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files) return;
+   setSelectedUploads(files)
+  }
   const areaName = (id: string) => {
     const area = areas.find(a => a.id === id);
     const loc = locations.find(l => l.id === area?.locationId);
     return area ? `${loc?.name || ""} → ${area.name}` : "—";
   };
+
+  const handleRemove = (index: number,previewType:ItemType) => {
+    const dataTransfer  = new DataTransfer()
+    Array.from(selectedUploads).forEach(((file,idx)=>{
+      if (index!==idx) {
+        dataTransfer.items.add(file)
+      }
+    }))
+    console.log("working",previewType,index)
+    if (previewType==="url") {
+      setForm(p => ({...p,images:p.images.filter((url,idx)=>idx!==index)}))
+    }
+    inputRef.current.files = dataTransfer.files
+    setSelectedUploads(dataTransfer.files)
+  }
 
   if (loading) {
     return (
@@ -151,9 +178,9 @@ const AdminModels = () => {
                 <SelectTrigger><SelectValue placeholder="Select Area" /></SelectTrigger>
                 <SelectContent>{areas.map(a => <SelectItem key={a.id} value={a.id}>{areaName(a.id)}</SelectItem>)}</SelectContent>
               </Select>
-              <Input placeholder="Name" value={form.name} onChange={e => setForm(p => ({ ...p, name: e.target.value, slug: editing ? p.slug : autoSlug(e.target.value) }))} />
-              <Input placeholder="Slug" value={form.slug} onChange={e => setForm(p => ({ ...p, slug: e.target.value }))} />
-              <Input placeholder="Image URL" value={form.image} onChange={e => setForm(p => ({ ...p, image: e.target.value }))} />
+              <Input placeholder="Name" value={form.name} onChange={e => setForm(p => ({ ...p, name: e.target.value, slug: editing ? p.slug : slugify(e.target.value) }))} />
+              <Input ref={inputRef} placeholder="Upload Image" type="file" multiple onChange={handleFileChange} />
+              <ImagePreviewList urls={form.images} files={ editing? []:selectedUploads} onRemove={handleRemove} />
               <Input placeholder="Phone Number (e.g. +919876543210)" value={form.phoneNumber} onChange={e => setForm(p => ({ ...p, phoneNumber: e.target.value }))} />
               <Input placeholder="Short Description" value={form.shortDescription} onChange={e => setForm(p => ({ ...p, shortDescription: e.target.value }))} />
               <Textarea placeholder="Full Description" value={form.description} onChange={e => setForm(p => ({ ...p, description: e.target.value }))} rows={3} />

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import slugify from "slugify"
 import { Plus, Pencil, Trash2, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -37,7 +38,6 @@ const AdminLocations = () => {
 
   const save = async () => {
     if (!form.name || !form.slug) { toast.error("Name and slug are required"); return; }
-    
     setSaving(true);
     try {
       if (editing) {
@@ -45,6 +45,7 @@ const AdminLocations = () => {
         toast.success("Location updated");
       } else {
         await createLocation(form);
+
         toast.success("Location added");
       }
       setOpen(false);
@@ -84,7 +85,7 @@ const AdminLocations = () => {
     setOpen(true);
   };
 
-  const autoSlug = (name: string) => name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+
 
   if (loading) {
     return (
@@ -105,9 +106,7 @@ const AdminLocations = () => {
           <DialogContent>
             <DialogHeader><DialogTitle>{editing ? "Edit" : "Add"} Location</DialogTitle></DialogHeader>
             <div className="space-y-3 mt-2">
-              <Input placeholder="Name" value={form.name} onChange={e => { setForm(p => ({ ...p, name: e.target.value, slug: editing ? p.slug : autoSlug(e.target.value) })); }} />
-              <Input placeholder="Slug" value={form.slug} onChange={e => setForm(p => ({ ...p, slug: e.target.value }))} />
-              <Input placeholder="Image URL" value={form.image} onChange={e => setForm(p => ({ ...p, image: e.target.value }))} />
+              <Input placeholder="Name" value={form.name} onChange={e => { setForm(p => ({ ...p, name: e.target.value, slug: editing ? p.slug : slugify(e.target.value) })); }} />
               <Textarea placeholder="Description" value={form.description} onChange={e => setForm(p => ({ ...p, description: e.target.value }))} />
               <Button onClick={save} className="w-full" disabled={saving}>
                 {saving ? <><Loader2 className="h-4 w-4 animate-spin mr-2" /> Saving...</> : editing ? "Update" : "Add"} Location
