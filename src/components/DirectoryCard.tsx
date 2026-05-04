@@ -21,7 +21,7 @@ const DirectoryCard = ({ title, description, image, href, count, countLabel }: D
     </div>
     <div className="p-5">
       <div className="flex items-center justify-between mb-2">
-        <h3 className="text-lg font-display font-semibold text-card-foreground group-hover:text-accent transition-colors">
+        <h3 className="text-lg  font-semibold text-card-foreground group-hover:text-accent transition-colors">
           {title}
         </h3>
         <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-accent group-hover:translate-x-1 transition-all" />

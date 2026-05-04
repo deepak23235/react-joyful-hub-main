@@ -122,7 +122,7 @@ const ModelDetailPage = () => {
 
             {/* Info */}
             <div>
-              <h1 className="text-3xl md:text-4xl font-display font-bold mb-2">{model.name}</h1>
+              <h1 className="text-3xl md:text-4xl  font-bold mb-2">{model.name}</h1>
               
               {/* Contact Buttons */}
               <div className="flex items-center gap-3 mb-4">
@@ -133,7 +133,7 @@ const ModelDetailPage = () => {
               <p className="text-muted-foreground mb-6 leading-relaxed">{model.description}</p>
 
               {/* Features */}
-              <h3 className="text-lg font-display font-semibold mb-3">Features</h3>
+              <h3 className="text-lg  font-semibold mb-3">Features</h3>
               <div className="grid grid-cols-2 gap-2 mb-6">
                 {model.features.map((f: string) => (
                   <div key={f} className="flex items-center gap-2 text-sm">
@@ -144,7 +144,7 @@ const ModelDetailPage = () => {
               </div>
 
               {/* Specs */}
-              <h3 className="text-lg font-display font-semibold mb-3">Specifications</h3>
+              <h3 className="text-lg  font-semibold mb-3">Specifications</h3>
               <div className="rounded-lg border overflow-hidden mb-6">
                 {Object.entries(model.specifications).map(([key, val]: [string, any], i: number) => (
                   <div key={key} className={`flex justify-between px-4 py-2.5 text-sm ${i % 2 === 0 ? "bg-muted/50" : ""}`}>
@@ -159,7 +159,7 @@ const ModelDetailPage = () => {
           {/* Enquiry */}
           <div className="max-w-xl mx-auto">
             <div className="rounded-lg border bg-card p-6 md:p-8">
-              <h2 className="text-2xl font-display font-bold mb-1">Send an Enquiry</h2>
+              <h2 className="text-2xl  font-bold mb-1">Send an Enquiry</h2>
               <p className="text-sm text-muted-foreground mb-6">Interested in {model.name}? Contact us or fill the form below.</p>
               <form onSubmit={handleEnquiry} className="space-y-4">
                 <Input placeholder="Your Name *" value={form.name} onChange={e => setForm(p => ({ ...p, name: e.target.value }))} />

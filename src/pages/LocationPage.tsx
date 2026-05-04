@@ -59,14 +59,14 @@ const LocationPage = () => {
         <img src={location.image} alt={location.name} className="w-full h-full object-cover" />
         <div className="absolute inset-0 bg-foreground/50" />
         <div className="absolute inset-0 flex items-center justify-center">
-          <h1 className="text-3xl md:text-4xl font-display font-bold text-primary-foreground">{location.name}</h1>
+          <h1 className="text-3xl md:text-4xl  font-bold text-primary-foreground">{location.name}</h1>
         </div>
       </div>
       <section className="py-12 flex-1">
         <div className="container">
           <Breadcrumbs items={[{ label: location.name }]} />
           <p className="text-muted-foreground mb-8 max-w-2xl">{location.description}</p>
-          <h2 className="text-xl font-display font-semibold mb-6">Areas in {location.name}</h2>
+          <h2 className="text-xl  font-semibold mb-6">Areas in {location.name}</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {areas.map((area) => (
               <DirectoryCard

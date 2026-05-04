@@ -44,7 +44,7 @@ const AdminEnquiries = () => {
 
   return (
     <AdminLayout>
-      <h1 className="text-2xl font-display font-bold mb-6">User Enquiries</h1>
+      <h1 className="text-2xl  font-bold mb-6">User Enquiries</h1>
       <div className="rounded-lg border overflow-hidden">
         <table className="w-full text-sm">
           <thead className="bg-muted/50">

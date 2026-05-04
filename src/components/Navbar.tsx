@@ -19,7 +19,7 @@ const Navbar = () => {
   return (
       <nav className="sticky top-0 z-50 border-b bg-card/80 backdrop-blur-md">
     <div className="container flex h-16 items-center justify-between">
-      <Link to="/" className="flex items-center gap-2 text-xl font-bold font-display text-foreground">
+      <Link to="/" className="flex items-center gap-2 text-xl font-bold  text-foreground">
         <MapPin className="h-5 w-5 text-accent" />
         ModelDir
       </Link>

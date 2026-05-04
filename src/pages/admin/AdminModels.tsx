@@ -80,10 +80,10 @@ const AdminModels = () => {
       });
       const final = { ...form, features, specifications, images:urls };
       if (editing) {
-        await updateModel(editing.id, {...final,images:[...form.images,...urls]});
+        await updateModel(editing.id, {...final,images:[...form.images,...urls],image:form.images[0]||urls[0]||""});
         toast.success("Model updated");
       } else {
-        await createModel(final);
+        await createModel({...final,image:urls[0]||""});
         toast.success("Model added");
       }
       setOpen(false);
@@ -168,7 +168,7 @@ const AdminModels = () => {
   return (
     <AdminLayout>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-display font-bold">Models</h1>
+        <h1 className="text-2xl  font-bold">Models</h1>
         <Dialog open={open} onOpenChange={setOpen}>
           <Button onClick={openNew} className="gap-2"><Plus className="h-4 w-4" /> Add Model</Button>
           <DialogContent className="max-h-[90vh] overflow-y-auto">

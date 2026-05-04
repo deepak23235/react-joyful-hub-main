@@ -2,8 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Playfair+Display:wght@400;500;600;700&display=swap');
-
 @layer base {
   :root {
     --background: 40 20% 98%;
@@ -83,18 +81,10 @@
   body {
     @apply bg-background text-foreground font-sans;
   }
-  h1, h2, h3, h4 {
-    font-family: 'Playfair Display', serif;
-  }
 }
 
 @layer utilities {
-  .font-display {
-    font-family: 'Playfair Display', serif;
-  }
-  .font-body {
-    font-family: 'DM Sans', sans-serif;
-  }
+  
   .card-elevated {
     box-shadow: var(--card-shadow);
     transition: box-shadow 0.3s ease, transform 0.3s ease;

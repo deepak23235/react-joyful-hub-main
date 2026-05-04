@@ -113,7 +113,7 @@ const AdminAreas = () => {
   return (
     <AdminLayout>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-display font-bold">Areas</h1>
+        <h1 className="text-2xl  font-bold">Areas</h1>
         <Dialog open={open} onOpenChange={setOpen}>
           <Button onClick={openNew} className="gap-2"><Plus className="h-4 w-4" /> Add Area</Button>
           <DialogContent>

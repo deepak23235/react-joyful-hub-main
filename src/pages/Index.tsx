@@ -99,7 +99,7 @@ const Index = () => {
       {/* Hero */}
       <section className="hero-gradient py-16 md:py-24">
         <div className="container text-center">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-primary-foreground mb-4 animate-fade-in">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl  font-bold text-primary-foreground mb-4 animate-fade-in">
             Find Models Near You
           </h1>
           <p
@@ -180,7 +180,7 @@ const Index = () => {
                   </div>
                   <div className="p-5">
                     <div className="flex items-center justify-between mb-1">
-                      <h3 className="text-lg font-display font-semibold text-card-foreground group-hover:text-accent transition-colors">
+                      <h3 className="text-lg  font-semibold text-card-foreground group-hover:text-accent transition-colors">
                         {model.name}
                       </h3>
                       <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-accent group-hover:translate-x-1 transition-all" />

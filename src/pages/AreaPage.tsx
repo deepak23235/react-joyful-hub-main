@@ -69,7 +69,7 @@ const AreaPage = () => {
         <div className="absolute inset-0 flex items-center justify-center text-center px-4">
           <div>
             <p className="text-sm text-primary-foreground/70 mb-1">{location.name}</p>
-            <h1 className="text-3xl md:text-4xl font-display font-bold text-primary-foreground">{area.name}</h1>
+            <h1 className="text-3xl md:text-4xl  font-bold text-primary-foreground">{area.name}</h1>
           </div>
         </div>
       </div>
@@ -80,7 +80,7 @@ const AreaPage = () => {
             { label: area.name },
           ]} />
           <p className="text-muted-foreground mb-8 max-w-2xl">{area.description}</p>
-          <h2 className="text-xl font-display font-semibold mb-6">Models in {area.name}</h2>
+          <h2 className="text-xl  font-semibold mb-6">Models in {area.name}</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {models.map((model) => (
               <Link
@@ -93,7 +93,7 @@ const AreaPage = () => {
                 </div>
                 <div className="p-5">
                   <div className="flex items-center justify-between mb-1">
-                    <h3 className="text-lg font-display font-semibold text-card-foreground group-hover:text-accent transition-colors">{model.name}</h3>
+                    <h3 className="text-lg  font-semibold text-card-foreground group-hover:text-accent transition-colors">{model.name}</h3>
                     <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-accent group-hover:translate-x-1 transition-all" />
                   </div>
                   <p className="text-sm text-muted-foreground line-clamp-2 mb-3">{model.shortDescription}</p>
