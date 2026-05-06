@@ -1,51 +1,31 @@
-import { useState, useEffect } from "react";
 import AdminLayout from "@/components/AdminLayout";
-import { fetchEnquiries, fetchModels } from "@/lib/store";
-import { Enquiry, Model } from "@/types";
-import { Loader2 } from "lucide-react";
-import { toast } from "sonner";
+import { useEnquiries, useModels } from "@/hooks/use-queries";
+import { Loader2, RefreshCcw } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const AdminEnquiries = () => {
-  const [enquiries, setEnquiries] = useState<Enquiry[]>([]);
-  const [models, setModels] = useState<Model[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data: enquiries = [], isLoading: enquiriesLoading, refetch: refetchEnquiries } = useEnquiries();
+  const { data: models = [], isLoading: modelsLoading, refetch: refetchModels } = useModels();
 
-  useEffect(() => {
-    loadData();
-  }, []);
+  const loading = enquiriesLoading || modelsLoading;
 
-  const loadData = async () => {
-    try {
-      const [enquiriesData, modelsData] = await Promise.all([
-        fetchEnquiries(),
-        fetchModels(),
-      ]);
-      setEnquiries(enquiriesData);
-      setModels(modelsData);
-    } catch (error) {
-      toast.error("Failed to load enquiries");
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
+  const handleRefresh = async () => {
+    await Promise.all([refetchEnquiries(), refetchModels()]);
   };
 
   const modelName = (id: string) => models.find(m => m.id === id)?.name || "—";
 
-  if (loading) {
-    return (
-      <AdminLayout>
-        <div className="flex items-center justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
-        </div>
-      </AdminLayout>
-    );
-  }
-
   return (
     <AdminLayout>
-      <h1 className="text-2xl  font-bold mb-6">User Enquiries</h1>
-      <div className="rounded-lg border overflow-hidden">
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-semibold tracking-tight">User Enquiries</h1>
+        <Button variant="outline" onClick={handleRefresh} disabled={loading} className="gap-2">
+          {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCcw className="h-4 w-4" />}
+          {loading ? "Refreshing..." : "Refresh"}
+        </Button>
+      </div>
+      <div className="surface-panel overflow-hidden">
         <table className="w-full text-sm">
           <thead className="bg-muted/50">
             <tr>
@@ -58,19 +38,32 @@ const AdminEnquiries = () => {
             </tr>
           </thead>
           <tbody>
-            {enquiries.map(e => (
-              <tr key={e.id} className="border-t">
-                <td className="px-4 py-3">{e.name}</td>
-                <td className="px-4 py-3 text-muted-foreground">{e.email}</td>
-                <td className="px-4 py-3">{e.phone}</td>
-                <td className="px-4 py-3">{modelName(e.modelId)}</td>
-                <td className="px-4 py-3 max-w-xs truncate">{e.message}</td>
-                <td className="px-4 py-3 text-muted-foreground">{new Date(e.createdAt).toLocaleDateString()}</td>
-              </tr>
-            ))}
+            {loading && !enquiries.length ? (
+              Array.from({ length: 5 }).map((_, i) => (
+                <tr key={i} className="border-t">
+                  <td className="px-4 py-3"><Skeleton className="h-4 w-24" /></td>
+                  <td className="px-4 py-3"><Skeleton className="h-4 w-32" /></td>
+                  <td className="px-4 py-3"><Skeleton className="h-4 w-24" /></td>
+                  <td className="px-4 py-3"><Skeleton className="h-4 w-24" /></td>
+                  <td className="px-4 py-3"><Skeleton className="h-4 w-48" /></td>
+                  <td className="px-4 py-3"><Skeleton className="h-4 w-20" /></td>
+                </tr>
+              ))
+            ) : (
+              enquiries.map(e => (
+                <tr key={e.id} className="border-t">
+                  <td className="px-4 py-3">{e.name}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{e.email}</td>
+                  <td className="px-4 py-3">{e.phone}</td>
+                  <td className="px-4 py-3">{modelName(e.modelId)}</td>
+                  <td className="px-4 py-3 max-w-xs truncate">{e.message}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{new Date(e.createdAt).toLocaleDateString()}</td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
-        {enquiries.length === 0 && <p className="text-center text-muted-foreground py-8">No enquiries yet.</p>}
+        {!loading && enquiries.length === 0 && <p className="text-center text-muted-foreground py-8">No enquiries yet.</p>}
       </div>
     </AdminLayout>
   );

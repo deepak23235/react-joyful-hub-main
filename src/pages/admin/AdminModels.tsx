@@ -1,77 +1,57 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import AdminLayout from "@/components/AdminLayout";
-import { fetchModels, createModel, updateModel, deleteModel, fetchAreas, fetchLocations } from "@/lib/store";
+import { useModels, useAreas, useLocations, useCreateModel, useUpdateModel, useDeleteModel } from "@/hooks/use-queries";
 import { Model, Area, Location } from "@/types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Plus, Pencil, Trash2, Loader2 } from "lucide-react";
+import { Plus, Pencil, Trash2, Loader2, RefreshCcw } from "lucide-react";
 import { toast } from "sonner";
 import { uploadFilesAndGetUrls } from "@/lib/utils";
 import slugify from "slugify"
 import ImagePreviewList, { ItemType } from "@/components/ImagePreviewList";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const emptyModel = (): Omit<Model, "id"> => ({
   areaId: "", name: "", slug: "", image: "", images: [], shortDescription: "", description: "", phoneNumber: "", features: [], specifications: {},
 });
 
 const AdminModels = () => {
-  const [locations, setLocations] = useState<Location[]>([]);
-  const [areas, setAreas] = useState<Area[]>([]);
-  const [models, setModels] = useState<Model[]>([]);
+  const { data: models = [], isLoading: modelsLoading, refetch: refetchModels } = useModels();
+  const { data: areas = [], isLoading: areasLoading, refetch: refetchAreas } = useAreas();
+  const { data: locations = [], isLoading: locationsLoading, refetch: refetchLocations } = useLocations();
+
+  const createMutation = useCreateModel();
+  const updateMutation = useUpdateModel();
+  const deleteMutation = useDeleteModel();
+
   const [editing, setEditing] = useState<Model | null>(null);
   const [form, setForm] = useState(emptyModel());
   const [featuresStr, setFeaturesStr] = useState("");
   const [specsStr, setSpecsStr] = useState("");
   const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const [selectedUploads,setSelectedUploads] = useState<FileList|[]>([]) 
   const inputRef = useRef<HTMLInputElement>(null)
 
+  const loading = modelsLoading || areasLoading || locationsLoading;
+  const saving = createMutation.isPending || updateMutation.isPending;
 
-  useEffect(() => {
-    loadData();
-  }, []);
-
-  const loadData = async () => {
-    try {
-      const [modelsData, areasData, locationsData] = await Promise.all([
-        fetchModels(),
-        fetchAreas(),
-        fetchLocations(),
-      ]);
-      setModels(modelsData);
-      setAreas(areasData);
-      setLocations(locationsData);
-      
-      // Pre-populate features and specs for editing
-      if (editing) {
-        const currentModel = modelsData.find(m => m.id === editing.id);
-        if (currentModel) {
-          setFeaturesStr(currentModel.features.join(", "));
-          setSpecsStr(Object.entries(currentModel.specifications).map(([k, v]) => `${k}:${v}`).join(", "));
-        }
-      }
-    } catch (error) {
-      toast.error("Failed to load data");
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
+  const handleRefresh = async () => {
+    await Promise.all([refetchModels(), refetchAreas(), refetchLocations()]);
   };
 
   const save = async () => {
     if (!form.name || !form.slug || !form.areaId) { toast.error("Name, slug and area required"); return; }
+    
     let urls:string[] =[]
  
-    if (selectedUploads.length) {
-      urls = await uploadFilesAndGetUrls(selectedUploads);
-    }
-    setSaving(true);
     try {
+      if (selectedUploads.length) {
+        urls = await uploadFilesAndGetUrls(selectedUploads);
+      }
       const features = featuresStr.split(",").map(f => f.trim()).filter(Boolean);
       const specifications: Record<string, string> = {};
       specsStr.split(",").forEach(pair => {
@@ -80,10 +60,13 @@ const AdminModels = () => {
       });
       const final = { ...form, features, specifications, images:urls };
       if (editing) {
-        await updateModel(editing.id, {...final,images:[...form.images,...urls],image:form.images[0]||urls[0]||""});
+        await updateMutation.mutateAsync({ 
+          id: editing.id, 
+          data: { ...final, images: [...form.images, ...urls], image: form.images[0] || urls[0] || "" } 
+        });
         toast.success("Model updated");
       } else {
-        await createModel({...final,image:urls[0]||""});
+        await createMutation.mutateAsync({ ...final, image: urls[0] || "" });
         toast.success("Model added");
       }
       setOpen(false);
@@ -91,25 +74,25 @@ const AdminModels = () => {
       setForm(emptyModel());
       setFeaturesStr("");
       setSpecsStr("");
-      await loadData();
+      setSelectedUploads([]);
     } catch (error) {
       toast.error("Failed to save model");
       console.error(error);
-    } finally {
-      setSaving(false);
     }
   };
 
   const remove = async (id: string) => {
     if (!confirm("Are you sure you want to delete this model?")) return;
     
+    setDeletingId(id);
     try {
-      await deleteModel(id);
-      setModels(models.filter(m => m.id !== id));
+      await deleteMutation.mutateAsync(id);
       toast.success("Model deleted");
     } catch (error) {
       toast.error("Failed to delete model");
       console.error(error);
+    } finally {
+      setDeletingId(null);
     }
   };
 
@@ -126,6 +109,7 @@ const AdminModels = () => {
     setForm(emptyModel());
     setFeaturesStr("");
     setSpecsStr("");
+    setSelectedUploads([]);
     setOpen(true);
   };
 
@@ -147,30 +131,28 @@ const AdminModels = () => {
         dataTransfer.items.add(file)
       }
     }))
-    console.log("working",previewType,index)
     if (previewType==="url") {
       setForm(p => ({...p,images:p.images.filter((url,idx)=>idx!==index)}))
     }
-    inputRef.current.files = dataTransfer.files
+    if (inputRef.current) {
+      inputRef.current.files = dataTransfer.files;
+    }
     setSelectedUploads(dataTransfer.files)
-  }
-
-  if (loading) {
-    return (
-      <AdminLayout>
-        <div className="flex items-center justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
-        </div>
-      </AdminLayout>
-    );
   }
 
   return (
     <AdminLayout>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl  font-bold">Models</h1>
-        <Dialog open={open} onOpenChange={setOpen}>
-          <Button onClick={openNew} className="gap-2"><Plus className="h-4 w-4" /> Add Model</Button>
+        <h1 className="text-2xl font-semibold tracking-tight">Models</h1>
+        <div className="flex items-center gap-2">
+          <Button variant="outline" onClick={handleRefresh} disabled={loading || saving || Boolean(deletingId)} className="gap-2">
+            {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCcw className="h-4 w-4" />}
+            {loading ? "Refreshing..." : "Refresh"}
+          </Button>
+          <Dialog open={open} onOpenChange={setOpen}>
+            <Button onClick={openNew} className="gap-2" disabled={loading || saving || Boolean(deletingId)}>
+              <Plus className="h-4 w-4" /> Add Model
+            </Button>
           <DialogContent className="max-h-[90vh] overflow-y-auto">
             <DialogHeader><DialogTitle>{editing ? "Edit" : "Add"} Model</DialogTitle></DialogHeader>
             <div className="space-y-3 mt-2">
@@ -191,28 +173,44 @@ const AdminModels = () => {
               </Button>
             </div>
           </DialogContent>
-        </Dialog>
+          </Dialog>
+        </div>
       </div>
-      <div className="rounded-lg border overflow-hidden">
+      <div className="surface-panel overflow-hidden">
         <table className="w-full text-sm">
           <thead className="bg-muted/50">
             <tr><th className="text-left px-4 py-3 font-medium">Name</th><th className="text-left px-4 py-3 font-medium">Area</th><th className="text-left px-4 py-3 font-medium">Phone</th><th className="text-right px-4 py-3 font-medium">Actions</th></tr>
           </thead>
           <tbody>
-            {models.map(m => (
-              <tr key={m.id} className="border-t">
-                <td className="px-4 py-3">{m.name}</td>
-                <td className="px-4 py-3 text-muted-foreground">{areaName(m.areaId)}</td>
-                <td className="px-4 py-3">{m.phoneNumber}</td>
-                <td className="px-4 py-3 text-right space-x-2">
-                  <Button variant="ghost" size="sm" onClick={() => openEdit(m)}><Pencil className="h-3.5 w-3.5" /></Button>
-                  <Button variant="ghost" size="sm" onClick={() => remove(m.id)}><Trash2 className="h-3.5 w-3.5 text-destructive" /></Button>
-                </td>
-              </tr>
-            ))}
+            {loading && !models.length ? (
+              Array.from({ length: 5 }).map((_, i) => (
+                <tr key={i} className="border-t">
+                  <td className="px-4 py-3"><Skeleton className="h-4 w-32" /></td>
+                  <td className="px-4 py-3"><Skeleton className="h-4 w-48" /></td>
+                  <td className="px-4 py-3"><Skeleton className="h-4 w-24" /></td>
+                  <td className="px-4 py-3 text-right"><Skeleton className="h-8 w-16 ml-auto" /></td>
+                </tr>
+              ))
+            ) : (
+              models.map(m => (
+                <tr key={m.id} className="border-t">
+                  <td className="px-4 py-3">{m.name}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{areaName(m.areaId)}</td>
+                  <td className="px-4 py-3">{m.phoneNumber}</td>
+                  <td className="px-4 py-3 text-right space-x-2">
+                    <Button variant="ghost" size="sm" onClick={() => openEdit(m)} disabled={saving || Boolean(deletingId)}>
+                      <Pencil className="h-3.5 w-3.5" />
+                    </Button>
+                    <Button variant="ghost" size="sm" onClick={() => remove(m.id)} disabled={saving || Boolean(deletingId)}>
+                      {deletingId === m.id ? <Loader2 className="h-3.5 w-3.5 animate-spin text-destructive" /> : <Trash2 className="h-3.5 w-3.5 text-destructive" />}
+                    </Button>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
-        {models.length === 0 && <p className="text-center text-muted-foreground py-8">No models yet.</p>}
+        {!loading && models.length === 0 && <p className="text-center text-muted-foreground py-8">No models yet.</p>}
       </div>
     </AdminLayout>
   );
