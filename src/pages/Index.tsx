@@ -87,7 +87,7 @@ const Index = () => {
       <section className="hero-gradient border-b py-16 md:py-24">
         <div className="container text-center">
           <h1 className="mx-auto mb-4 max-w-4xl text-4xl font-semibold tracking-tight text-primary-foreground md:text-5xl lg:text-6xl animate-fade-in">
-            Find Models Near You
+            Find Call Girls Near You
           </h1>
           <p
             className="mx-auto mb-8 max-w-2xl text-base text-primary-foreground/80 md:text-lg animate-fade-in"
