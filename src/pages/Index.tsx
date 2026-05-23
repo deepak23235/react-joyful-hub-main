@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import SEO from "@/components/SEO";
 import ContactButtons from "@/components/ContactButtons";
 import { MapPin, ArrowRight, Search } from "lucide-react";
 import {
@@ -77,6 +78,11 @@ const Index = () => {
 
   return (
     <div className="flex flex-col min-h-screen">
+      <SEO
+        title="Find Call Girls Near You"
+        description="Discover the perfect call girl in your location and area. Browse featured models with contact details, specifications, and more."
+        url="/"
+      />
       {/* Hero */}
       <section className="hero-gradient border-b py-16 md:py-24">
         <div className="container text-center">

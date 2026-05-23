@@ -25,9 +25,8 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
       {/* Sidebar */}
       <aside className={`fixed inset-y-0 left-0 z-40 w-64 transform border-r border-sidebar-border bg-sidebar text-sidebar-foreground transition-transform lg:translate-x-0 ${open ? "translate-x-0" : "-translate-x-full"}`}>
         <div className="border-b border-sidebar-border p-6">
-          <Link to="/" className="flex items-center gap-2 text-lg font-semibold text-sidebar-foreground">
-            <MapPin className="h-5 w-5 text-sidebar-primary" />
-            ModelDir
+          <Link to="/" className="flex items-center">
+            <img src="/logo.png" alt="Logo" className="h-9 w-auto object-contain" />
           </Link>
           <span className="mt-1 block text-xs uppercase tracking-wide text-sidebar-foreground/55">Admin Panel</span>
         </div>

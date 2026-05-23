@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import { MapPin } from "lucide-react";
 import { Skeleton } from "./ui/skeleton";
 import { useLocations } from "@/hooks/use-queries";
 
@@ -9,11 +8,8 @@ const Footer = () => {
   return (
     <footer className="mt-auto border-t bg-muted/30">
       <div className="container py-10 text-center">
-        <div className="mb-4 flex items-center justify-center gap-2 text-lg font-semibold text-foreground">
-          <span className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-accent/15">
-            <MapPin className="h-4 w-4 text-accent" />
-          </span>
-          ModelDir
+        <div className="mb-4 flex items-center justify-center">
+          <img src="/logo.png" alt="Logo" className="h-10 w-auto object-contain" />
         </div>
 
         <div className="mx-auto mb-5 max-w-3xl">
@@ -43,7 +39,7 @@ const Footer = () => {
         </div>
 
         <p className="text-sm text-muted-foreground">
-          © {new Date().getFullYear()} ModelDir. All rights reserved.
+          © {new Date().getFullYear()} Selviescortservice. All rights reserved.
         </p>
       </div>
     </footer>

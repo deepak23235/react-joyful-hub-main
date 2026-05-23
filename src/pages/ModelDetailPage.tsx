@@ -1,5 +1,6 @@
 import { useParams } from "react-router-dom";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import SEO from "@/components/SEO";
 import ContactButtons from "@/components/ContactButtons";
 import { useLocationBySlug, useAreaBySlug, useModelBySlug } from "@/hooks/use-queries";
 import { CheckCircle } from "lucide-react";
@@ -21,6 +22,15 @@ const ModelDetailPage = () => {
 
   return (
     <div className="flex flex-col min-h-screen">
+      <SEO
+        title={model && area && location ? `${model.name} – Escort in ${area.name}, ${location.name}` : "Model"}
+        description={model && area && location ? `${model.shortDescription || model.description} | Escort service in ${area.name}, ${location.name}.` : undefined}
+        image={model?.images?.[0] || model?.image}
+        url={model ? `/${locationSlug}/${areaSlug}/${modelSlug}` : undefined}
+        type="article"
+        locationName={location?.name}
+        areaName={area?.name}
+      />
       <section className="section-padding flex-1">
         <div className="container">
           {loading ? (

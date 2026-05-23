@@ -1,5 +1,6 @@
 import { useParams, Link } from "react-router-dom";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import SEO from "@/components/SEO";
 import ContactButtons from "@/components/ContactButtons";
 import { useLocationBySlug, useAreaBySlug, useModels } from "@/hooks/use-queries";
 import { ArrowRight } from "lucide-react";
@@ -25,12 +26,31 @@ const AreaPage = () => {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <div className="relative h-52 overflow-hidden md:h-72 bg-muted">
+      <SEO
+        title={area && location ? `Escort Service in ${area.name}, ${location.name}` : "Area"}
+        description={area && location ? `Find escort service and call girls in ${area.name}, ${location.name}. Browse verified profiles with contact details.` : undefined}
+        image={area?.image}
+        url={area ? `/${locationSlug}/${areaSlug}` : undefined}
+        locationName={location?.name}
+        areaName={area?.name}
+      />
+      <div
+        className="relative h-52 md:h-72 bg-muted"
+        style={
+          area
+            ? {
+                backgroundImage: `url(${area.image})`,
+                backgroundAttachment: "fixed",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+              }
+            : undefined
+        }
+      >
         {loading ? (
           <Skeleton className="w-full h-full" />
         ) : area && location ? (
           <>
-            <img src={area.image} alt={area.name} className="w-full h-full object-cover" />
             <div className="absolute inset-0 bg-foreground/45" />
             <div className="absolute inset-0 flex items-center justify-center text-center px-4">
               <div>
