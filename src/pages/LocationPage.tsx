@@ -44,29 +44,14 @@ const LocationPage = () => {
       />
 
       {/* Hero banner */}
-      <div
-        className="relative h-48 md:h-64 bg-muted"
-        style={
-          location
-            ? {
-                backgroundImage: `url(${location.image})`,
-                backgroundAttachment: "fixed",
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-              }
-            : undefined
-        }
-      >
-        {loading ? (
-          <Skeleton className="w-full h-full" />
-        ) : location ? (
-          <>
-            <div className="absolute inset-0 bg-foreground/50" />
-            <div className="absolute inset-0 flex items-center justify-center">
-              <h1 className="text-3xl md:text-4xl font-bold text-primary-foreground">{location.name}</h1>
-            </div>
-          </>
-        ) : null}
+      <div className="relative h-48 md:h-64 hero-gradient">
+        <div className="absolute inset-0 flex items-center justify-center">
+          {loading ? (
+            <Skeleton className="h-10 w-48" />
+          ) : location ? (
+            <h1 className="text-3xl md:text-4xl font-bold text-primary-foreground drop-shadow">{location.name}</h1>
+          ) : null}
+        </div>
       </div>
 
       <section className="py-12 flex-1">

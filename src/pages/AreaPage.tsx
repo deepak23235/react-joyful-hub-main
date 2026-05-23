@@ -34,32 +34,20 @@ const AreaPage = () => {
         locationName={location?.name}
         areaName={area?.name}
       />
-      <div
-        className="relative h-52 md:h-72 bg-muted"
-        style={
-          area
-            ? {
-                backgroundImage: `url(${area.image})`,
-                backgroundAttachment: "fixed",
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-              }
-            : undefined
-        }
-      >
-        {loading ? (
-          <Skeleton className="w-full h-full" />
-        ) : area && location ? (
-          <>
-            <div className="absolute inset-0 bg-foreground/45" />
-            <div className="absolute inset-0 flex items-center justify-center text-center px-4">
-              <div>
-                <p className="mb-2 text-sm text-primary-foreground/75">{location.name}</p>
-                <h1 className="text-3xl font-semibold tracking-tight text-primary-foreground md:text-4xl">{area.name}</h1>
-              </div>
+      <div className="relative h-52 md:h-72 hero-gradient">
+        <div className="absolute inset-0 flex items-center justify-center text-center px-4">
+          {loading ? (
+            <div className="space-y-2">
+              <Skeleton className="h-4 w-24 mx-auto" />
+              <Skeleton className="h-10 w-48 mx-auto" />
             </div>
-          </>
-        ) : null}
+          ) : area && location ? (
+            <div>
+              <p className="mb-2 text-sm text-primary-foreground/75">{location.name}</p>
+              <h1 className="text-3xl font-semibold tracking-tight text-primary-foreground md:text-4xl drop-shadow">{area.name}</h1>
+            </div>
+          ) : null}
+        </div>
       </div>
       <section className="section-padding flex-1">
         <div className="container">
