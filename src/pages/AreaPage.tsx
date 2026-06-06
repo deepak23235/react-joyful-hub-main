@@ -27,8 +27,8 @@ const AreaPage = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <SEO
-        title={area && location ? `Escort Service in ${area.name}, ${location.name}` : "Area"}
-        description={area && location ? `Find escort service and call girls in ${area.name}, ${location.name}. Browse verified profiles with contact details.` : undefined}
+        title={area && location ? `Call Girls in ${area.name}, ${location.name} | Escort Service Near Me` : "Area"}
+        description={area && location ? `Find call girls and escort service in ${area.name}, ${location.name}. Verified female escorts near ${area.name} with direct contact numbers and photos. Call or WhatsApp directly.` : undefined}
         image={area?.image}
         url={area ? `/${locationSlug}/${areaSlug}` : undefined}
         locationName={location?.name}

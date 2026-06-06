@@ -24,7 +24,7 @@ const ModelDetailPage = () => {
     <div className="flex flex-col min-h-screen">
       <SEO
         title={model && area && location ? `${model.name} – Escort in ${area.name}, ${location.name}` : "Model"}
-        description={model && area && location ? `${model.shortDescription || model.description} | Escort service in ${area.name}, ${location.name}.` : undefined}
+        description={model && area && location ? `${model.shortDescription || model.description || `Independent escort and call girl in ${area.name}, ${location.name}`}. Contact directly for escort service in ${area.name}, ${location.name}.` : undefined}
         image={model?.images?.[0] || model?.image}
         url={model ? `/${locationSlug}/${areaSlug}/${modelSlug}` : undefined}
         type="article"

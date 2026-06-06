@@ -36,8 +36,8 @@ const LocationPage = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <SEO
-        title={location ? `Escort Service in ${location.name}` : "Location"}
-        description={location ? `Find verified escort service and call girls in ${location.name}. Browse profiles with contact details and photos.` : undefined}
+        title={location ? `Call Girls in ${location.name} | Escort Service` : "Location"}
+        description={location ? `Find verified call girls and escort service in ${location.name}. Browse independent female escorts with direct contact numbers, photos and profiles. Available across all areas of ${location.name}.` : undefined}
         image={location?.image}
         url={location ? `/${locationSlug}` : undefined}
         locationName={location?.name}

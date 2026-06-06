@@ -79,8 +79,8 @@ const Index = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <SEO
-        title="Find Call Girls Near You"
-        description="Discover the perfect call girl in your location and area. Browse featured models with contact details, specifications, and more."
+        title="Call Girls Near You | Escort Service Across India"
+        description="Find verified call girls and escort service near you across Mumbai, Pune, Bangalore, Hyderabad, Chennai, Thane and more. Browse profiles with direct contact numbers. No registration required."
         url="/"
         faqs={[
           {

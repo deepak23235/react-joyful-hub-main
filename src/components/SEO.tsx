@@ -46,7 +46,7 @@ const DEFAULT_TITLE = "Selviescortservice – Escort Service Near You";
 const DEFAULT_DESCRIPTION =
   "Find verified escort service near you. Browse profiles with contact details across all major cities and areas.";
 const DEFAULT_KEYWORDS =
-  "escort service near me, call girls near me, escort service India, models near me";
+  "call girls near me, escort service near me, call girl number, escort service India, independent escort India, female escort near me, VIP escort service, verified call girls India";
 const DEFAULT_IMAGE = `${SITE_URL}/og-image.png`;
 
 const toAbsoluteImage = (image?: string): string => {
@@ -57,18 +57,25 @@ const toAbsoluteImage = (image?: string): string => {
 
 const buildKeywords = (locationName?: string, areaName?: string): string => {
   if (!locationName) return DEFAULT_KEYWORDS;
-  const area = areaName ? `${areaName}, ` : "";
+  const loc = locationName;
+  const area = areaName ?? "";
   return [
-    `escort service in ${locationName}`,
-    `call girls in ${locationName}`,
-    `${locationName} escort service`,
-    `models near me ${locationName}`,
-    areaName ? `escort service in ${areaName}` : "",
-    areaName ? `call girls in ${areaName} ${locationName}` : "",
-    `${area}${locationName} call girls`,
-    `${area}${locationName} models`,
-    `escort near me ${locationName}`,
+    `call girls in ${loc}`,
+    `escort service in ${loc}`,
+    `${loc} call girl number`,
+    `${loc} escort service`,
+    `independent escort in ${loc}`,
+    `female escort ${loc}`,
+    `verified call girls ${loc}`,
+    `VIP escort service ${loc}`,
+    `call girl near me ${loc}`,
+    `escort near me ${loc}`,
+    area ? `call girls in ${area} ${loc}` : "",
+    area ? `escort service in ${area} ${loc}` : "",
+    area ? `${area} ${loc} call girl number` : "",
+    area ? `escort near ${area}` : "",
     "escort service near me",
+    "call girls near me",
   ]
     .filter(Boolean)
     .join(", ");
