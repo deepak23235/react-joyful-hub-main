@@ -7,7 +7,16 @@ import { HelmetProvider } from "react-helmet-async";
 import "./lib/supabase";
 import { RouteGenerator } from "./routes/RouteGenerator";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 2 * 60 * 1000,   // data fresh for 2 min — no refetch on navigation
+      gcTime: 5 * 60 * 1000,      // keep unused cache for 5 min
+      refetchOnWindowFocus: false, // don't refetch when user tabs back
+      retry: 1,
+    },
+  },
+});
 
 const App = () => (
   <HelmetProvider>

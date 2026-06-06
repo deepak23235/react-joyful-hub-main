@@ -90,7 +90,7 @@ const LocationPage = () => {
             {loading ? (
               Array.from({ length: 6 }).map((_, i) => <ModelCardSkeleton key={i} />)
             ) : (
-              models.map((model) => {
+              models.map((model, cardIdx) => {
                 const areaSlug = getAreaSlug(model.areaId);
                 const area = locationAreas.find((a) => a.id === model.areaId);
 
@@ -108,7 +108,8 @@ const LocationPage = () => {
                             src={img}
                             alt={`${model.name} ${idx + 1}`}
                             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                            loading="lazy"
+                            loading={cardIdx < 3 ? undefined : "lazy"}
+                            fetchPriority={cardIdx === 0 && idx === 0 ? "high" : undefined}
                           />
                         ))}
                       </div>
@@ -118,7 +119,8 @@ const LocationPage = () => {
                           src={(model.images && model.images[0]) || model.image}
                           alt={model.name}
                           className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                          loading="lazy"
+                          loading={cardIdx < 3 ? undefined : "lazy"}
+                          fetchPriority={cardIdx === 0 ? "high" : undefined}
                         />
                       </div>
                     )}
