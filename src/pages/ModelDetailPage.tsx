@@ -30,6 +30,13 @@ const ModelDetailPage = () => {
         type="article"
         locationName={location?.name}
         areaName={area?.name}
+        breadcrumbs={model && area && location ? [
+          { name: location.name, url: `/${locationSlug}` },
+          { name: area.name, url: `/${locationSlug}/${areaSlug}` },
+          { name: model.name },
+        ] : undefined}
+        personName={model?.name}
+        personDescription={model?.shortDescription || model?.description}
       />
       <section className="section-padding flex-1">
         <div className="container">
@@ -59,7 +66,7 @@ const ModelDetailPage = () => {
                 <div className="grid grid-cols-2 gap-3">
                   {modelImages.map((img: string, i: number) => (
                     <div key={i} className="aspect-square overflow-hidden rounded-lg border bg-card">
-                      <img src={img} alt={`${model.name} ${i + 1}`} className="w-full h-full object-cover" />
+                      <img src={img} alt={`${model.name} ${i + 1}`} className="w-full h-full object-cover" loading="lazy" />
                     </div>
                   ))}
                 </div>

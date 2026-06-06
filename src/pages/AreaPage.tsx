@@ -33,6 +33,15 @@ const AreaPage = () => {
         url={area ? `/${locationSlug}/${areaSlug}` : undefined}
         locationName={location?.name}
         areaName={area?.name}
+        breadcrumbs={area && location ? [
+          { name: location.name, url: `/${locationSlug}` },
+          { name: area.name },
+        ] : undefined}
+        itemList={models.slice(0, 50).map((m) => ({
+          name: m.name,
+          url: `/${locationSlug}/${areaSlug}/${m.slug}`,
+          image: (m.images && m.images[0]) || m.image,
+        }))}
       />
       <div className="relative h-52 md:h-72 hero-gradient">
         <div className="absolute inset-0 flex items-center justify-center text-center px-4">
@@ -87,6 +96,7 @@ const AreaPage = () => {
                           src={img}
                           alt={`${model.name} ${idx + 1}`}
                           className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                          loading="lazy"
                         />
                       ))}
                     </div>
@@ -96,6 +106,7 @@ const AreaPage = () => {
                         src={(model.images && model.images[0]) || model.image}
                         alt={model.name}
                         className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        loading="lazy"
                       />
                     </div>
                   )}

@@ -10,5 +10,24 @@ Allow: /
 User-agent: facebookexternalhit
 Allow: /
 
+# Allow AI answer engine crawlers so content is cited as a source
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+# Block Google's AI training crawler while keeping Search indexing
+User-agent: Google-Extended
+Disallow: /
+
+# Block admin and API routes for all crawlers
 User-agent: *
 Allow: /
+Disallow: /admin/
+Disallow: /api/
+
+Sitemap: https://selviescortservice.com/sitemap.xml

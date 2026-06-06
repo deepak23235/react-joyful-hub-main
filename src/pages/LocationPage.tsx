@@ -41,6 +41,15 @@ const LocationPage = () => {
         image={location?.image}
         url={location ? `/${locationSlug}` : undefined}
         locationName={location?.name}
+        breadcrumbs={location ? [{ name: location.name }] : undefined}
+        itemList={models.slice(0, 50).map((m) => {
+          const areaSlug = getAreaSlug(m.areaId);
+          return {
+            name: m.name,
+            url: `/${locationSlug}/${areaSlug}/${m.slug}`,
+            image: (m.images && m.images[0]) || m.image,
+          };
+        })}
       />
 
       {/* Hero banner */}
@@ -99,6 +108,7 @@ const LocationPage = () => {
                             src={img}
                             alt={`${model.name} ${idx + 1}`}
                             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                            loading="lazy"
                           />
                         ))}
                       </div>
@@ -108,6 +118,7 @@ const LocationPage = () => {
                           src={(model.images && model.images[0]) || model.image}
                           alt={model.name}
                           className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                          loading="lazy"
                         />
                       </div>
                     )}

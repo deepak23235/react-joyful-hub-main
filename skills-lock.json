@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "skills": {
+    "seo-aeo-best-practices": {
+      "source": "sanity-io/agent-toolkit",
+      "sourceType": "github",
+      "skillPath": "skills/seo-aeo-best-practices/SKILL.md",
+      "computedHash": "edb99db85683ff99678fcb1bebc3a5653c3ea927eea9ee2534f19be86c7b8b81"
+    },
+    "seo-sitemap": {
+      "source": "agricidaniel/claude-seo",
+      "sourceType": "github",
+      "skillPath": "skills/seo-sitemap/SKILL.md",
+      "computedHash": "740de94a4632791e90e50e9189ed035517a7f5b63b469a1b15e2441ebc28d9bf"
+    }
+  }
+}

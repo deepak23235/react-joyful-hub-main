@@ -82,6 +82,28 @@ const Index = () => {
         title="Find Call Girls Near You"
         description="Discover the perfect call girl in your location and area. Browse featured models with contact details, specifications, and more."
         url="/"
+        faqs={[
+          {
+            question: "What is Selviescortservice?",
+            answer: "Selviescortservice is India's verified escort directory where you can browse profiles of escorts and call girls across all major cities and areas. Every profile includes contact details and photos.",
+          },
+          {
+            question: "How do I find escort services near me?",
+            answer: "Use the location and area filters on our homepage to narrow down escorts in your city or neighbourhood. Select your city, then choose a specific area, and click Explore to see available profiles.",
+          },
+          {
+            question: "Are all profiles on Selviescortservice verified?",
+            answer: "Yes. All profiles listed on Selviescortservice are manually reviewed before going live to ensure authenticity and accuracy of contact information.",
+          },
+          {
+            question: "Which cities does Selviescortservice cover?",
+            answer: "We cover all major Indian cities including Mumbai, Delhi, Bangalore, Hyderabad, Chennai, Kolkata, Pune, and many more, along with their sub-areas.",
+          },
+          {
+            question: "How do I contact an escort listed on the site?",
+            answer: "Each profile has direct contact buttons — you can call or WhatsApp the listed number directly from the profile page. No registration is required.",
+          },
+        ]}
       />
       {/* Hero */}
       <section className="hero-gradient border-b py-16 md:py-24">
@@ -185,6 +207,7 @@ const Index = () => {
                             src={img}
                             alt={`${model.name} ${idx + 1}`}
                             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                            loading="lazy"
                           />
                         ))}
                       </div>
@@ -194,6 +217,7 @@ const Index = () => {
                           src={(model.images && model.images[0]) || model.image}
                           alt={model.name}
                           className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                          loading="lazy"
                         />
                       </div>
                     )}
@@ -229,6 +253,42 @@ const Index = () => {
               <p className="text-sm text-muted-foreground mt-1">Try changing the location or area.</p>
             </div>
           )}
+        </div>
+      </section>
+
+      {/* FAQ – AEO content block: direct answers for AI answer engines */}
+      <section className="section-padding border-t bg-muted/30">
+        <div className="container max-w-3xl">
+          <h2 className="mb-8 text-2xl font-semibold tracking-tight">Frequently Asked Questions</h2>
+          <dl className="space-y-6">
+            {[
+              {
+                q: "What is Selviescortservice?",
+                a: "Selviescortservice is India's verified escort directory where you can browse profiles of escorts and call girls across all major cities and areas. Every profile includes contact details and photos.",
+              },
+              {
+                q: "How do I find escort services near me?",
+                a: "Use the location and area filters on our homepage to narrow down escorts in your city or neighbourhood. Select your city, then choose a specific area, and click Explore to see available profiles.",
+              },
+              {
+                q: "Are all profiles on Selviescortservice verified?",
+                a: "Yes. All profiles listed on Selviescortservice are manually reviewed before going live to ensure authenticity and accuracy of contact information.",
+              },
+              {
+                q: "Which cities does Selviescortservice cover?",
+                a: "We cover all major Indian cities including Mumbai, Delhi, Bangalore, Hyderabad, Chennai, Kolkata, Pune, and many more, along with their sub-areas.",
+              },
+              {
+                q: "How do I contact an escort listed on the site?",
+                a: "Each profile has direct contact buttons — you can call or WhatsApp the listed number directly from the profile page. No registration is required.",
+              },
+            ].map(({ q, a }) => (
+              <div key={q} className="border-b pb-6 last:border-0 last:pb-0">
+                <dt className="mb-2 font-semibold text-foreground">{q}</dt>
+                <dd className="text-muted-foreground leading-relaxed">{a}</dd>
+              </div>
+            ))}
+          </dl>
         </div>
       </section>
     </div>
