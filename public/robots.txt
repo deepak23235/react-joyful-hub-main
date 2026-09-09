@@ -30,4 +30,4 @@ Allow: /
 Disallow: /admin/
 Disallow: /api/
 
-Sitemap: https://selviescortservice.com/sitemap.xml
+Sitemap: https://findergirlsnearme.com/sitemap.xml

@@ -84,19 +84,19 @@ const Index = () => {
         url="/"
         faqs={[
           {
-            question: "What is Selviescortservice?",
-            answer: "Selviescortservice is India's verified escort directory where you can browse profiles of escorts and call girls across all major cities and areas. Every profile includes contact details and photos.",
+            question: "What is Finder Girls Near Me?",
+            answer: "Finder Girls Near Me is India's verified escort directory where you can browse profiles of escorts and call girls across all major cities and areas. Every profile includes contact details and photos.",
           },
           {
             question: "How do I find escort services near me?",
             answer: "Use the location and area filters on our homepage to narrow down escorts in your city or neighbourhood. Select your city, then choose a specific area, and click Explore to see available profiles.",
           },
           {
-            question: "Are all profiles on Selviescortservice verified?",
-            answer: "Yes. All profiles listed on Selviescortservice are manually reviewed before going live to ensure authenticity and accuracy of contact information.",
+            question: "Are all profiles on Finder Girls Near Me verified?",
+            answer: "Yes. All profiles listed on Finder Girls Near Me are manually reviewed before going live to ensure authenticity and accuracy of contact information.",
           },
           {
-            question: "Which cities does Selviescortservice cover?",
+            question: "Which cities does Finder Girls Near Me cover?",
             answer: "We cover all major Indian cities including Mumbai, Delhi, Bangalore, Hyderabad, Chennai, Kolkata, Pune, and many more, along with their sub-areas.",
           },
           {
@@ -265,19 +265,19 @@ const Index = () => {
           <dl className="space-y-6">
             {[
               {
-                q: "What is Selviescortservice?",
-                a: "Selviescortservice is India's verified escort directory where you can browse profiles of escorts and call girls across all major cities and areas. Every profile includes contact details and photos.",
+                q: "What is Finder Girls Near Me?",
+                a: "Finder Girls Near Me is India's verified escort directory where you can browse profiles of escorts and call girls across all major cities and areas. Every profile includes contact details and photos.",
               },
               {
                 q: "How do I find escort services near me?",
                 a: "Use the location and area filters on our homepage to narrow down escorts in your city or neighbourhood. Select your city, then choose a specific area, and click Explore to see available profiles.",
               },
               {
-                q: "Are all profiles on Selviescortservice verified?",
-                a: "Yes. All profiles listed on Selviescortservice are manually reviewed before going live to ensure authenticity and accuracy of contact information.",
+                q: "Are all profiles on Finder Girls Near Me verified?",
+                a: "Yes. All profiles listed on Finder Girls Near Me are manually reviewed before going live to ensure authenticity and accuracy of contact information.",
               },
               {
-                q: "Which cities does Selviescortservice cover?",
+                q: "Which cities does Finder Girls Near Me cover?",
                 a: "We cover all major Indian cities including Mumbai, Delhi, Bangalore, Hyderabad, Chennai, Kolkata, Pune, and many more, along with their sub-areas.",
               },
               {

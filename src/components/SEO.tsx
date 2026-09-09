@@ -40,9 +40,9 @@ interface SEOProps {
   faqs?: FaqItem[];
 }
 
-const SITE_NAME = "Selviescortservice";
-const SITE_URL = "https://selviescortservice.com";
-const DEFAULT_TITLE = "Selviescortservice – Escort Service Near You";
+const SITE_NAME = "Finder Girls Near Me";
+const SITE_URL = "https://findergirlsnearme.com";
+const DEFAULT_TITLE = "Finder Girls Near Me – Escort Service Near You";
 const DEFAULT_DESCRIPTION =
   "Find verified escort service near you. Browse profiles with contact details across all major cities and areas.";
 const DEFAULT_KEYWORDS =
