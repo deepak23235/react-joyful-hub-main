@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import SEO from "@/components/SEO";
@@ -7,6 +8,8 @@ import { ArrowRight } from "lucide-react";
 import NotFound from "./NotFound";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ModelCardSkeleton } from "@/components/ModelCardSkeleton";
+import LocationSearch from "@/components/LocationSearch";
+import { useLocationSearch } from "@/hooks/use-location-search";
 
 const AreaPage = () => {
   const { locationSlug, areaSlug } = useParams<{ locationSlug: string; areaSlug: string }>();
@@ -21,6 +24,9 @@ const AreaPage = () => {
   const models = allModels && area
     ? allModels.filter(model => model.areaId === area.id)
     : [];
+
+  const getAreaName = useCallback(() => area?.name ?? "", [area?.name]);
+  const { query, setQuery, filteredModels } = useLocationSearch(models, location?.name ?? "", getAreaName);
 
   if (!loading && (!location || !area)) return <NotFound />;
 
@@ -74,6 +80,7 @@ const AreaPage = () => {
                 { label: area.name },
               ]} />
               <p className="mb-8 max-w-2xl text-muted-foreground">{area.description}</p>
+              <LocationSearch query={query} onQueryChange={setQuery} resultCount={filteredModels.length} locationName={`${area.name}, ${location.name}`} />
               <h2 className="mb-6 text-xl font-semibold tracking-tight">Models in {area.name}</h2>
             </>
           ) : null}
@@ -82,7 +89,7 @@ const AreaPage = () => {
             {loading ? (
               Array.from({ length: 6 }).map((_, i) => <ModelCardSkeleton key={i} />)
             ) : (
-              models.map((model, cardIdx) => (
+              filteredModels.map((model, cardIdx) => (
                 <Link
                   key={model.id}
                   to={`/${locationSlug}/${areaSlug}/${model.slug}`}
@@ -124,7 +131,12 @@ const AreaPage = () => {
               ))
             )}
           </div>
-          {!loading && models.length === 0 && <p className="text-center text-muted-foreground py-12">No models added yet.</p>}
+          {!loading && filteredModels.length === 0 && (
+            <div className="py-12 text-center text-muted-foreground">
+              <p>No matches — try nearby areas or clear your search.</p>
+              {query && <button type="button" onClick={() => setQuery("")} className="mt-3 text-accent hover:underline">Clear search</button>}
+            </div>
+          )}
         </div>
       </section>
     </div>

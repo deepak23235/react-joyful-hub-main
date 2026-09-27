@@ -1,0 +1,7 @@
+Owner review before production
+
+- Replace public/hero-placeholder.webp with the final licensed hero image, or set SITE.hero.video in src/config/site.ts to a muted, looping MP4/WebM under 3 MB. Keep the poster image.
+- Confirm any years of experience, awards, revenue, or numeric achievements before adding them. None are claimed in the current About copy.
+- Approve the FAQ entries marked ownerReview in src/data/faqs.ts, especially verification, fees, incall/outcall, removal, adults-only, and legal wording.
+- Confirm the public reporting/contact route to mention in the FAQ. The current wording does not invent an email address or form.
+- In Render/Cloudflare, keep findergirlsnearme.com as the primary custom domain. Verify the repo Blueprint is applied so the SPA rewrite and security headers are served. Render handles HTTPS and redirects www to the primary root domain.

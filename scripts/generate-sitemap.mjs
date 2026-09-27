@@ -12,6 +12,13 @@ import { createClient } from "@supabase/supabase-js";
 import { writeFileSync } from "fs";
 
 const SITE_URL = "https://findergirlsnearme.com";
+
+function canonicalPath(...segments) {
+  return segments
+    .filter(Boolean)
+    .map((segment) => String(segment).replace(/^\/+|\/+$/g, ""))
+    .join("/");
+}
 const supabaseUrl = process.env.VITE_SUPABASE_URL;
 const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY;
 
@@ -40,7 +47,8 @@ async function generate() {
   const entries = [];
 
   // Homepage
-  entries.push(urlEntry(SITE_URL, null));
+  entries.push(urlEntry(`${SITE_URL}/`, null));
+  entries.push(urlEntry(`${SITE_URL}/about-us`, null));
 
   // Locations
   const { data: locations, error: locErr } = await supabase
@@ -49,7 +57,7 @@ async function generate() {
   if (locErr) throw locErr;
 
   for (const loc of locations ?? []) {
-    entries.push(urlEntry(`${SITE_URL}/${loc.slug}`, loc.updated_at));
+    entries.push(urlEntry(`${SITE_URL}/${canonicalPath(loc.slug)}`, loc.updated_at));
   }
 
   // Areas
@@ -61,7 +69,7 @@ async function generate() {
   for (const area of areas ?? []) {
     const locSlug = area.location?.slug;
     if (!locSlug) continue;
-    entries.push(urlEntry(`${SITE_URL}/${locSlug}/${area.slug}`, area.updated_at));
+    entries.push(urlEntry(`${SITE_URL}/${canonicalPath(locSlug, area.slug)}`, area.updated_at));
   }
 
   // Models
@@ -74,7 +82,7 @@ async function generate() {
     const areaSlug = model.area?.slug;
     const locSlug = model.area?.location?.slug;
     if (!areaSlug || !locSlug) continue;
-    entries.push(urlEntry(`${SITE_URL}/${locSlug}/${areaSlug}/${model.slug}`, model.updated_at));
+    entries.push(urlEntry(`${SITE_URL}/${canonicalPath(locSlug, areaSlug, model.slug)}`, model.updated_at));
   }
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>

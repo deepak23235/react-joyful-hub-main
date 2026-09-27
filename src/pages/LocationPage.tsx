@@ -1,3 +1,4 @@
+import { useCallback, useMemo } from "react";
 import { useParams, Link } from "react-router-dom";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import SEO from "@/components/SEO";
@@ -7,6 +8,8 @@ import NotFound from "./NotFound";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ModelCardSkeleton } from "@/components/ModelCardSkeleton";
 import { ArrowRight, MapPin } from "lucide-react";
+import LocationSearch from "@/components/LocationSearch";
+import { useLocationSearch } from "@/hooks/use-location-search";
 
 const LocationPage = () => {
   const { locationSlug } = useParams<{ locationSlug: string }>();
@@ -18,9 +21,9 @@ const LocationPage = () => {
   const loading = locationLoading || areasLoading || modelsLoading;
 
   // Areas that belong to this location
-  const locationAreas = allAreas && location
+  const locationAreas = useMemo(() => allAreas && location
     ? allAreas.filter((a) => a.locationId === location.id)
-    : [];
+    : [], [allAreas, location]);
 
   // All models across every area of this location
   const locationAreaIds = locationAreas.map((a) => a.id);
@@ -30,6 +33,10 @@ const LocationPage = () => {
 
   const getAreaSlug = (areaId: string) =>
     locationAreas.find((a) => a.id === areaId)?.slug ?? "";
+
+  const getAreaName = useCallback((areaId: string) =>
+    locationAreas.find((area) => area.id === areaId)?.name ?? "", [locationAreas]);
+  const { query, setQuery, filteredModels } = useLocationSearch(models, location?.name ?? "", getAreaName);
 
   if (!loading && !location) return <NotFound />;
 
@@ -76,11 +83,12 @@ const LocationPage = () => {
             <>
               <Breadcrumbs items={[{ label: location.name }]} />
               <p className="text-muted-foreground mb-8 max-w-2xl">{location.description}</p>
+              <LocationSearch query={query} onQueryChange={setQuery} resultCount={filteredModels.length} locationName={location.name} />
               <div className="mb-6 flex items-center justify-between">
                 <h2 className="text-xl font-semibold">Models in {location.name}</h2>
                 <p className="text-sm text-muted-foreground">
-                  <span className="font-semibold text-foreground">{models.length}</span>{" "}
-                  result{models.length !== 1 ? "s" : ""}
+                  <span className="font-semibold text-foreground">{filteredModels.length}</span>{" "}
+                  result{filteredModels.length !== 1 ? "s" : ""}
                 </p>
               </div>
             </>
@@ -90,7 +98,7 @@ const LocationPage = () => {
             {loading ? (
               Array.from({ length: 6 }).map((_, i) => <ModelCardSkeleton key={i} />)
             ) : (
-              models.map((model, cardIdx) => {
+              filteredModels.map((model, cardIdx) => {
                 const areaSlug = getAreaSlug(model.areaId);
                 const area = locationAreas.find((a) => a.id === model.areaId);
 
@@ -150,8 +158,11 @@ const LocationPage = () => {
             )}
           </div>
 
-          {!loading && models.length === 0 && (
-            <p className="text-center text-muted-foreground py-12">No models available in this location yet.</p>
+          {!loading && filteredModels.length === 0 && (
+            <div className="py-12 text-center text-muted-foreground">
+              <p>No matches — try a nearby area or clear your search.</p>
+              {query && <button type="button" onClick={() => setQuery("")} className="mt-3 text-accent hover:underline">Clear search</button>}
+            </div>
           )}
         </div>
       </section>

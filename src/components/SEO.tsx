@@ -1,4 +1,6 @@
 import { Helmet } from "react-helmet-async";
+import { SITE } from "@/config/site";
+import { canonicalUrl as makeCanonicalUrl, schemaId } from "@/lib/seo";
 
 interface BreadcrumbItem {
   name: string;
@@ -40,8 +42,8 @@ interface SEOProps {
   faqs?: FaqItem[];
 }
 
-const SITE_NAME = "Finder Girls Near Me";
-const SITE_URL = "https://findergirlsnearme.com";
+const SITE_NAME = SITE.name;
+const SITE_URL = SITE.url;
 const DEFAULT_TITLE = "Finder Girls Near Me – Escort Service Near You";
 const DEFAULT_DESCRIPTION =
   "Find verified escort service near you. Browse profiles with contact details across all major cities and areas.";
@@ -109,7 +111,7 @@ const buildSchema = ({
   // Organization – always present, referenced by other nodes
   graph.push({
     "@type": "Organization",
-    "@id": `${SITE_URL}/#organization`,
+    "@id": schemaId(SITE_URL, "organization"),
     name: SITE_NAME,
     url: SITE_URL,
     logo: {
@@ -123,10 +125,10 @@ const buildSchema = ({
   // WebSite with sitelinks SearchBox
   graph.push({
     "@type": "WebSite",
-    "@id": `${SITE_URL}/#website`,
+    "@id": schemaId(SITE_URL, "website"),
     name: SITE_NAME,
     url: SITE_URL,
-    publisher: { "@id": `${SITE_URL}/#organization` },
+    publisher: { "@id": schemaId(SITE_URL, "organization") },
     potentialAction: {
       "@type": "SearchAction",
       target: `${SITE_URL}/?q={search_term_string}`,
@@ -137,11 +139,11 @@ const buildSchema = ({
   // WebPage
   graph.push({
     "@type": "WebPage",
-    "@id": `${canonicalUrl}/#webpage`,
+    "@id": schemaId(canonicalUrl, "webpage"),
     url: canonicalUrl,
     name: SITE_NAME,
     description,
-    isPartOf: { "@id": `${SITE_URL}/#website` },
+    isPartOf: { "@id": schemaId(SITE_URL, "website") },
     primaryImageOfPage: {
       "@type": "ImageObject",
       url: absoluteImage,
@@ -152,12 +154,11 @@ const buildSchema = ({
   if (locationName) {
     graph.push({
       "@type": "LocalBusiness",
-      "@id": `${canonicalUrl}/#localbusiness`,
+      "@id": schemaId(canonicalUrl, "localbusiness"),
       name: SITE_NAME,
       description,
       url: canonicalUrl,
       image: absoluteImage,
-      priceRange: "$$",
       address: {
         "@type": "PostalAddress",
         addressLocality: areaName ?? locationName,
@@ -182,7 +183,7 @@ const buildSchema = ({
     ];
     graph.push({
       "@type": "BreadcrumbList",
-      "@id": `${canonicalUrl}/#breadcrumb`,
+      "@id": schemaId(canonicalUrl, "breadcrumb"),
       itemListElement: crumbs.map((crumb, index) => ({
         "@type": "ListItem",
         position: index + 1,
@@ -196,7 +197,7 @@ const buildSchema = ({
   if (personName) {
     graph.push({
       "@type": "Person",
-      "@id": `${canonicalUrl}/#person`,
+      "@id": schemaId(canonicalUrl, "person"),
       name: personName,
       ...(personDescription && { description: personDescription }),
       url: canonicalUrl,
@@ -218,7 +219,7 @@ const buildSchema = ({
   if (itemList && itemList.length > 0) {
     graph.push({
       "@type": "ItemList",
-      "@id": `${canonicalUrl}/#itemlist`,
+      "@id": schemaId(canonicalUrl, "itemlist"),
       url: canonicalUrl,
       numberOfItems: itemList.length,
       itemListElement: itemList.map((item, index) => ({
@@ -235,7 +236,7 @@ const buildSchema = ({
   if (faqs && faqs.length > 0) {
     graph.push({
       "@type": "FAQPage",
-      "@id": `${canonicalUrl}/#faq`,
+      "@id": schemaId(canonicalUrl, "faq"),
       mainEntity: faqs.map((faq) => ({
         "@type": "Question",
         name: faq.question,
@@ -267,7 +268,7 @@ const SEO = ({
   faqs,
 }: SEOProps) => {
   const fullTitle = title ? `${title} | ${SITE_NAME}` : DEFAULT_TITLE;
-  const canonicalUrl = url ? `${SITE_URL}${url}` : SITE_URL;
+  const canonicalUrl = makeCanonicalUrl(url ?? "/");
   const absoluteImage = toAbsoluteImage(image);
   const resolvedKeywords = keywords ?? buildKeywords(locationName, areaName);
 

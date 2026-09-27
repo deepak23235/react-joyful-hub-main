@@ -29,7 +29,7 @@ const GlobalLayout = () => {
         });
     
         return () => subscription.unsubscribe();
-      }, []);
+      }, [dispatch]);
     return (
         <>
             <Navbar />

@@ -10,6 +10,7 @@ import AdminAreas from "@/pages/admin/AdminAreas";
 import AdminModels from "@/pages/admin/AdminModels";
 import AdminEnquiries from "@/pages/admin/AdminEnquiries";
 import NotFound from "@/pages/NotFound";
+import AboutPage from "@/pages/AboutPage";
 import GlobalLayout from "@/components/GlobalLayout";
 
 export interface RouteConfig {
@@ -25,6 +26,7 @@ export const routes: RouteConfig[] = [
     element: <GlobalLayout />,
     children: [
       { index: true, element: <Index /> },
+      { path: "about-us", element: <AboutPage /> },
       { path: "login", element: <LoginPage /> },
       { path: ":locationSlug", element: <LocationPage /> },
       { path: ":locationSlug/:areaSlug", element: <AreaPage /> },
