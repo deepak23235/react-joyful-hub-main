@@ -6,6 +6,7 @@ import { useLocationBySlug, useAreaBySlug, useModelBySlug } from "@/hooks/use-qu
 import { CheckCircle } from "lucide-react";
 import NotFound from "./NotFound";
 import { Skeleton } from "@/components/ui/skeleton";
+import { escortsPath } from "@/lib/seo";
 
 const ModelDetailPage = () => {
   const { locationSlug, areaSlug, modelSlug } = useParams<{ locationSlug: string; areaSlug: string; modelSlug: string }>();
@@ -26,13 +27,13 @@ const ModelDetailPage = () => {
         title={model && area && location ? `${model.name} – Escort in ${area.name}, ${location.name}` : "Model"}
         description={model && area && location ? `${model.shortDescription || model.description || `Independent escort and call girl in ${area.name}, ${location.name}`}. Contact directly for escort service in ${area.name}, ${location.name}.` : undefined}
         image={model?.images?.[0] || model?.image}
-        url={model ? `/${locationSlug}/${areaSlug}/${modelSlug}` : undefined}
+        url={model ? escortsPath(locationSlug, areaSlug, modelSlug) : undefined}
         type="article"
         locationName={location?.name}
         areaName={area?.name}
         breadcrumbs={model && area && location ? [
-          { name: location.name, url: `/${locationSlug}` },
-          { name: area.name, url: `/${locationSlug}/${areaSlug}` },
+          { name: location.name, url: escortsPath(locationSlug) },
+          { name: area.name, url: escortsPath(locationSlug, areaSlug) },
           { name: model.name },
         ] : undefined}
         personName={model?.name}
@@ -46,8 +47,8 @@ const ModelDetailPage = () => {
             </div>
           ) : location && area && model ? (
             <Breadcrumbs items={[
-              { label: location.name, href: `/${locationSlug}` },
-              { label: area.name, href: `/${locationSlug}/${areaSlug}` },
+              { label: location.name, href: escortsPath(locationSlug) },
+              { label: area.name, href: escortsPath(locationSlug, areaSlug) },
               { label: model.name },
             ]} />
           ) : null}

@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { CheckCircle2, LockKeyhole, MapPin, PhoneCall } from "lucide-react";
 import type { Location } from "@/types";
+import { escortsPath } from "@/lib/seo";
 
 interface AboutUsProps {
   locations: Location[];
@@ -28,7 +29,7 @@ const AboutUs = ({ locations, compact = false }: AboutUsProps) => (
         </div>
         <div className="mt-6 flex flex-wrap gap-2" aria-label="Areas served">
           {locations.map((location) => (
-            <Link key={location.id} to={`/${location.slug}`} className="rounded-full border px-3 py-1.5 text-sm text-muted-foreground hover:border-accent hover:text-accent">
+            <Link key={location.id} to={escortsPath(location.slug)} className="rounded-full border px-3 py-1.5 text-sm text-muted-foreground hover:border-accent hover:text-accent">
               {location.name}
             </Link>
           ))}

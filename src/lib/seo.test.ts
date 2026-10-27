@@ -1,19 +1,31 @@
 import { describe, expect, it } from "vitest";
-import { canonicalPath, canonicalUrl } from "@/lib/seo";
+import { canonicalPath, canonicalUrl, escortsPath, urlSlug } from "@/lib/seo";
 
 describe("canonical URL generation", () => {
   it.each([
     ["/", "https://findergirlsnearme.com/"],
-    ["/Mumbai?utm_source=test", "https://findergirlsnearme.com/Mumbai"],
-    ["/Banglore/B.T.M-Nagar/", "https://findergirlsnearme.com/Banglore/B.T.M-Nagar"],
-    ["/Banglore/B.T.M-Nagar/Minakshi?q=B.T.M#photos", "https://findergirlsnearme.com/Banglore/B.T.M-Nagar/Minakshi"],
+    ["/about-us?utm_source=test", "https://findergirlsnearme.com/about-us"],
+    ["/escorts/Mumbai?utm_source=test", "https://findergirlsnearme.com/escorts/mumbai/"],
+    ["/escorts/Banglore/Gandhi-nagar", "https://findergirlsnearme.com/escorts/bangalore/gandhi-nagar/"],
+    ["/escorts/Banglore/B.T.M-Nagar/Minakshi?q=B.T.M#photos", "https://findergirlsnearme.com/escorts/bangalore/btm-nagar/minakshi/"],
   ])("canonicalizes %s", (input, expected) => {
     expect(canonicalUrl(input)).toBe(expected);
   });
 
-  it("removes a non-canonical origin without changing slug case or dots", () => {
-    expect(canonicalPath("http://www.findergirlsnearme.com/Banglore/B.T.M-Nagar?ref=old"))
-      .toBe("/Banglore/B.T.M-Nagar");
+  it("removes a non-canonical origin", () => {
+    expect(canonicalPath("http://www.findergirlsnearme.com/escorts/bangalore/gandhi-nagar/?ref=old"))
+      .toBe("/escorts/bangalore/gandhi-nagar/");
   });
 });
 
+describe("escorts paths", () => {
+  it("builds lowercase paths with a trailing slash", () => {
+    expect(escortsPath("Banglore", "Gandhi-nagar")).toBe("/escorts/bangalore/gandhi-nagar/");
+    expect(escortsPath("Navi-mumbai", "cbd-belapur", "Riya Sharma")).toBe("/escorts/navi-mumbai/cbd-belapur/riya-sharma/");
+  });
+
+  it("normalizes stored slugs", () => {
+    expect(urlSlug("R.T-Nagar")).toBe("rt-nagar");
+    expect(urlSlug("Banglore")).toBe("bangalore");
+  });
+});

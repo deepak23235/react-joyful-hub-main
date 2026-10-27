@@ -1,6 +1,7 @@
 import { supabase } from './supabase';
 import { Location, Area, Model, Enquiry } from '@/types';
 import { Database } from '@/types/supabase';
+import { slugMatches } from './seo';
 
 type LocationRow = Database['public']['Tables']['locations']['Row'];
 type AreaRow = Database['public']['Tables']['areas']['Row'];
@@ -76,12 +77,11 @@ export const fetchLocations = async (): Promise<Location[]> => {
 export const fetchLocationBySlug = async (slug: string): Promise<Location | undefined> => {
   const { data, error } = await supabase
     .from('locations')
-    .select('*')
-    .eq('slug', slug)
-    .single();
+    .select('*');
 
   if (error) return undefined;
-  return toLocation(data);
+  const row = (data || []).find((r) => slugMatches(r.slug, slug));
+  return row ? toLocation(row) : undefined;
 };
 
 export const createLocation = async (location: Omit<Location, 'id'>): Promise<Location> => {
@@ -160,12 +160,11 @@ export const fetchAreaBySlug = async (locationId: string, slug: string): Promise
   const { data, error } = await supabase
     .from('areas')
     .select('*')
-    .eq('location_id', locationId)
-    .eq('slug', slug)
-    .single();
+    .eq('location_id', locationId);
 
   if (error) return undefined;
-  return toArea(data);
+  const row = (data || []).find((r) => slugMatches(r.slug, slug));
+  return row ? toArea(row) : undefined;
 };
 
 export const createArea = async (area: Omit<Area, 'id'>): Promise<Area> => {
@@ -246,12 +245,11 @@ export const fetchModelBySlug = async (areaId: string, slug: string): Promise<Mo
   const { data, error } = await supabase
     .from('models')
     .select('*')
-    .eq('area_id', areaId)
-    .eq('slug', slug)
-    .single();
+    .eq('area_id', areaId);
 
   if (error) return undefined;
-  return toModel(data);
+  const row = (data || []).find((r) => slugMatches(r.slug, slug));
+  return row ? toModel(row) : undefined;
 };
 
 export const createModel = async (model: Omit<Model, 'id'>): Promise<Model> => {

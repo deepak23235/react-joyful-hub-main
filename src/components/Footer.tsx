@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Skeleton } from "./ui/skeleton";
 import { useLocations } from "@/hooks/use-queries";
+import { escortsPath } from "@/lib/seo";
 
 const Footer = () => {
   const { data: locations = [], isLoading: loading } = useLocations();
@@ -26,7 +27,7 @@ const Footer = () => {
               {locations.map((location) => (
                 <Link
                   key={location.id}
-                  to={`/${location.slug}`}
+                  to={escortsPath(location.slug)}
                   className="rounded-full border bg-background px-3 py-1 text-sm text-muted-foreground transition-colors hover:border-accent/40 hover:text-accent"
                 >
                   {location.name}

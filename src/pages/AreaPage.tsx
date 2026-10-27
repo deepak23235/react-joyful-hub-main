@@ -10,6 +10,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { ModelCardSkeleton } from "@/components/ModelCardSkeleton";
 import LocationSearch from "@/components/LocationSearch";
 import { useLocationSearch } from "@/hooks/use-location-search";
+import { escortsPath } from "@/lib/seo";
 
 const AreaPage = () => {
   const { locationSlug, areaSlug } = useParams<{ locationSlug: string; areaSlug: string }>();
@@ -36,16 +37,16 @@ const AreaPage = () => {
         title={area && location ? `Call Girls in ${area.name}, ${location.name} | Escort Service Near Me` : "Area"}
         description={area && location ? `Find call girls and escort service in ${area.name}, ${location.name}. Verified female escorts near ${area.name} with direct contact numbers and photos. Call or WhatsApp directly.` : undefined}
         image={area?.image}
-        url={area ? `/${locationSlug}/${areaSlug}` : undefined}
+        url={area ? escortsPath(locationSlug, areaSlug) : undefined}
         locationName={location?.name}
         areaName={area?.name}
         breadcrumbs={area && location ? [
-          { name: location.name, url: `/${locationSlug}` },
+          { name: location.name, url: escortsPath(locationSlug) },
           { name: area.name },
         ] : undefined}
         itemList={models.slice(0, 50).map((m) => ({
           name: m.name,
-          url: `/${locationSlug}/${areaSlug}/${m.slug}`,
+          url: escortsPath(locationSlug, areaSlug, m.slug),
           image: (m.images && m.images[0]) || m.image,
         }))}
       />
@@ -76,7 +77,7 @@ const AreaPage = () => {
           ) : area && location ? (
             <>
               <Breadcrumbs items={[
-                { label: location.name, href: `/${locationSlug}` },
+                { label: location.name, href: escortsPath(locationSlug) },
                 { label: area.name },
               ]} />
               <p className="mb-8 max-w-2xl text-muted-foreground">{area.description}</p>
@@ -92,7 +93,7 @@ const AreaPage = () => {
               filteredModels.map((model, cardIdx) => (
                 <Link
                   key={model.id}
-                  to={`/${locationSlug}/${areaSlug}/${model.slug}`}
+                  to={escortsPath(locationSlug, areaSlug, model.slug)}
                   className="group block overflow-hidden rounded-xl border bg-card card-elevated"
                 >
                   {model.images && model.images.length > 1 ? (

@@ -1,4 +1,5 @@
 import { ReactElement } from "react";
+import { Navigate } from "react-router-dom";
 import Index from "@/pages/Index";
 import LocationPage from "@/pages/LocationPage";
 import AreaPage from "@/pages/AreaPage";
@@ -12,6 +13,7 @@ import AdminEnquiries from "@/pages/admin/AdminEnquiries";
 import NotFound from "@/pages/NotFound";
 import AboutPage from "@/pages/AboutPage";
 import GlobalLayout from "@/components/GlobalLayout";
+import { EscortsCanonical, LegacyRedirect } from "@/components/SeoRedirects";
 
 export interface RouteConfig {
   path?: string;
@@ -28,9 +30,26 @@ export const routes: RouteConfig[] = [
       { index: true, element: <Index /> },
       { path: "about-us", element: <AboutPage /> },
       { path: "login", element: <LoginPage /> },
-      { path: ":locationSlug", element: <LocationPage /> },
-      { path: ":locationSlug/:areaSlug", element: <AreaPage /> },
-      { path: ":locationSlug/:areaSlug/:modelSlug", element: <ModelDetailPage /> },
+      { path: "escorts", element: <Navigate to="/" replace /> },
+      {
+        path: "escorts/:locationSlug",
+        element: <EscortsCanonical />,
+        children: [{ index: true, element: <LocationPage /> }],
+      },
+      {
+        path: "escorts/:locationSlug/:areaSlug",
+        element: <EscortsCanonical />,
+        children: [{ index: true, element: <AreaPage /> }],
+      },
+      {
+        path: "escorts/:locationSlug/:areaSlug/:modelSlug",
+        element: <EscortsCanonical />,
+        children: [{ index: true, element: <ModelDetailPage /> }],
+      },
+      // Old URLs without the /escorts prefix
+      { path: ":locationSlug", element: <LegacyRedirect /> },
+      { path: ":locationSlug/:areaSlug", element: <LegacyRedirect /> },
+      { path: ":locationSlug/:areaSlug/:modelSlug", element: <LegacyRedirect /> },
       { path: "*", element: <NotFound /> },
     ],
   },

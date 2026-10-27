@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/carousel";
 import ContactButtons from "@/components/ContactButtons";
 import { cn } from "@/lib/utils";
+import { escortsPath } from "@/lib/seo";
 import type { Area, Location, Model } from "@/types";
 
 interface Props {
@@ -62,7 +63,7 @@ const LocationModelCarousel = ({ locations, areas, models }: Props) => {
             <p className="mb-1 text-sm font-semibold uppercase tracking-wider text-accent">Real profiles, grouped by city</p>
             <h2 id="browse-location-heading" className="text-3xl font-semibold tracking-tight">Browse by Location</h2>
           </div>
-          <Link to={`/${selected.location.slug}`} className="text-sm font-medium text-accent hover:underline">View all in {selected.location.name}</Link>
+          <Link to={escortsPath(selected.location.slug)} className="text-sm font-medium text-accent hover:underline">View all in {selected.location.name}</Link>
         </div>
         <div className="mb-7 flex gap-2 overflow-x-auto pb-2" role="tablist" aria-label="Profile locations">
           {availableLocations.map(({ location, models: locationModels }) => (
@@ -83,7 +84,7 @@ const LocationModelCarousel = ({ locations, areas, models }: Props) => {
             {visibleModels.map((model, index) => {
               const area = areaFor(model.areaId);
               if (!area) return null;
-              const profileUrl = `/${selected.location.slug}/${area.slug}/${model.slug}`;
+              const profileUrl = escortsPath(selected.location.slug, area.slug, model.slug);
               return (
                 <CarouselItem key={model.id} className="sm:basis-1/2 lg:basis-1/4" aria-label={`${index + 1} of ${visibleModels.length}`}>
                   <article className="h-full overflow-hidden rounded-xl border bg-card card-elevated">

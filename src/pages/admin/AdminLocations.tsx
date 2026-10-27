@@ -88,7 +88,7 @@ const AdminLocations = () => {
           <DialogContent>
             <DialogHeader><DialogTitle>{editing ? "Edit" : "Add"} Location</DialogTitle></DialogHeader>
             <div className="space-y-3 mt-2">
-              <Input placeholder="Name" value={form.name} onChange={e => { setForm(p => ({ ...p, name: e.target.value, slug: editing ? p.slug : slugify(e.target.value) })); }} />
+              <Input placeholder="Name" value={form.name} onChange={e => { setForm(p => ({ ...p, name: e.target.value, slug: editing ? p.slug : slugify(e.target.value, { lower: true, strict: true }) })); }} />
               <Textarea placeholder="Description" value={form.description} onChange={e => setForm(p => ({ ...p, description: e.target.value }))} />
               <Button onClick={save} className="w-full" disabled={saving}>
                 {saving ? <><Loader2 className="h-4 w-4 animate-spin mr-2" /> Saving...</> : editing ? "Update" : "Add"} Location

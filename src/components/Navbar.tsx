@@ -8,6 +8,7 @@ import { useAreas, useLocations } from "@/hooks/use-queries";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
+import { escortsPath } from "@/lib/seo";
 
 const Navbar = () => {
   const isLoggedIn = useAppSelector((state) => state.authSlice.isLoggedIn);
@@ -17,7 +18,7 @@ const Navbar = () => {
   const { data: areas = [] } = useAreas();
   const [locationsOpen, setLocationsOpen] = useState(false);
 
-  const isActive = (path: string) => pathname === path || (path !== "/" && pathname.startsWith(`${path}/`));
+  const isActive = (path: string) => pathname === path || (path !== "/" && pathname.startsWith(path.endsWith("/") ? path : `${path}/`));
   const areaLinks = (locationId: string) => areas.filter((area) => area.locationId === locationId).slice(0, 6);
 
   const signOut = () => {
@@ -46,10 +47,10 @@ const Navbar = () => {
                 <div className="grid max-h-[65vh] grid-cols-2 gap-6 overflow-y-auto xl:grid-cols-3">
                   {locations.map((location) => (
                     <div key={location.id}>
-                      <Link to={`/${location.slug}`} onClick={() => setLocationsOpen(false)} aria-current={isActive(`/${location.slug}`) ? "page" : undefined} className={cn("font-semibold hover:text-accent", isActive(`/${location.slug}`) && "text-accent")}>{location.name}</Link>
+                      <Link to={escortsPath(location.slug)} onClick={() => setLocationsOpen(false)} aria-current={isActive(escortsPath(location.slug)) ? "page" : undefined} className={cn("font-semibold hover:text-accent", isActive(escortsPath(location.slug)) && "text-accent")}>{location.name}</Link>
                       <ul className="mt-2 space-y-1">
                         {areaLinks(location.id).map((area) => (
-                          <li key={area.id}><Link to={`/${location.slug}/${area.slug}`} onClick={() => setLocationsOpen(false)} className="text-sm text-muted-foreground hover:text-foreground">{area.name}</Link></li>
+                          <li key={area.id}><Link to={escortsPath(location.slug, area.slug)} onClick={() => setLocationsOpen(false)} className="text-sm text-muted-foreground hover:text-foreground">{area.name}</Link></li>
                         ))}
                       </ul>
                     </div>
@@ -75,10 +76,10 @@ const Navbar = () => {
                   <SheetClose asChild><a href="/#browse-by-location" className="flex items-center gap-2 text-sm font-medium text-accent"><Navigation className="h-4 w-4" /> All Locations / Near Me</a></SheetClose>
                   {locations.map((location) => (
                     <details key={location.id} className="rounded-md bg-muted/40 p-2">
-                      <summary className={cn("cursor-pointer font-medium", isActive(`/${location.slug}`) && "text-accent")}>{location.name}</summary>
+                      <summary className={cn("cursor-pointer font-medium", isActive(escortsPath(location.slug)) && "text-accent")}>{location.name}</summary>
                       <div className="mt-2 space-y-2 border-l pl-3">
-                        <SheetClose asChild><Link to={`/${location.slug}`} className="block text-sm font-medium">View all in {location.name}</Link></SheetClose>
-                        {areaLinks(location.id).map((area) => <SheetClose asChild key={area.id}><Link to={`/${location.slug}/${area.slug}`} className="block text-sm text-muted-foreground">{area.name}</Link></SheetClose>)}
+                        <SheetClose asChild><Link to={escortsPath(location.slug)} className="block text-sm font-medium">View all in {location.name}</Link></SheetClose>
+                        {areaLinks(location.id).map((area) => <SheetClose asChild key={area.id}><Link to={escortsPath(location.slug, area.slug)} className="block text-sm text-muted-foreground">{area.name}</Link></SheetClose>)}
                       </div>
                     </details>
                   ))}

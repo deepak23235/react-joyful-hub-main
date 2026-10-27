@@ -160,7 +160,7 @@ const AdminModels = () => {
                 <SelectTrigger><SelectValue placeholder="Select Area" /></SelectTrigger>
                 <SelectContent>{areas.map(a => <SelectItem key={a.id} value={a.id}>{areaName(a.id)}</SelectItem>)}</SelectContent>
               </Select>
-              <Input placeholder="Name" value={form.name} onChange={e => setForm(p => ({ ...p, name: e.target.value, slug: editing ? p.slug : slugify(e.target.value) }))} />
+              <Input placeholder="Name" value={form.name} onChange={e => setForm(p => ({ ...p, name: e.target.value, slug: editing ? p.slug : slugify(e.target.value, { lower: true, strict: true }) }))} />
               <Input ref={inputRef} placeholder="Upload Image" type="file" multiple onChange={handleFileChange} />
               <ImagePreviewList urls={form.images} files={ editing? []:selectedUploads} onRemove={handleRemove} />
               <Input placeholder="Phone Number (e.g. +919876543210)" value={form.phoneNumber} onChange={e => setForm(p => ({ ...p, phoneNumber: e.target.value }))} />

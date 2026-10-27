@@ -10,6 +10,7 @@ import { ModelCardSkeleton } from "@/components/ModelCardSkeleton";
 import { ArrowRight, MapPin } from "lucide-react";
 import LocationSearch from "@/components/LocationSearch";
 import { useLocationSearch } from "@/hooks/use-location-search";
+import { escortsPath } from "@/lib/seo";
 
 const LocationPage = () => {
   const { locationSlug } = useParams<{ locationSlug: string }>();
@@ -46,14 +47,14 @@ const LocationPage = () => {
         title={location ? `Call Girls in ${location.name} | Escort Service` : "Location"}
         description={location ? `Find verified call girls and escort service in ${location.name}. Browse independent female escorts with direct contact numbers, photos and profiles. Available across all areas of ${location.name}.` : undefined}
         image={location?.image}
-        url={location ? `/${locationSlug}` : undefined}
+        url={location ? escortsPath(locationSlug) : undefined}
         locationName={location?.name}
         breadcrumbs={location ? [{ name: location.name }] : undefined}
         itemList={models.slice(0, 50).map((m) => {
           const areaSlug = getAreaSlug(m.areaId);
           return {
             name: m.name,
-            url: `/${locationSlug}/${areaSlug}/${m.slug}`,
+            url: escortsPath(locationSlug, areaSlug, m.slug),
             image: (m.images && m.images[0]) || m.image,
           };
         })}
@@ -105,7 +106,7 @@ const LocationPage = () => {
                 return (
                   <Link
                     key={model.id}
-                    to={`/${locationSlug}/${areaSlug}/${model.slug}`}
+                    to={escortsPath(locationSlug, areaSlug, model.slug)}
                     className="group block overflow-hidden rounded-xl border bg-card card-elevated"
                   >
                     {model.images && model.images.length > 1 ? (

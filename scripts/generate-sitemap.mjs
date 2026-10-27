@@ -13,12 +13,22 @@ import { writeFileSync } from "fs";
 
 const SITE_URL = "https://findergirlsnearme.com";
 
-function canonicalPath(...segments) {
-  return segments
-    .filter(Boolean)
-    .map((segment) => String(segment).replace(/^\/+|\/+$/g, ""))
-    .join("/");
+// Keep in sync with urlSlug/escortsPath in src/lib/seo.ts
+const SLUG_FIXES = { banglore: "bangalore" };
+
+function urlSlug(value) {
+  const slug = String(value)
+    .toLowerCase()
+    .replace(/\./g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+  return SLUG_FIXES[slug] ?? slug;
 }
+
+function escortsPath(...segments) {
+  return `/escorts/${segments.filter(Boolean).map(urlSlug).join("/")}/`;
+}
+
 const supabaseUrl = process.env.VITE_SUPABASE_URL;
 const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY;
 
@@ -57,7 +67,7 @@ async function generate() {
   if (locErr) throw locErr;
 
   for (const loc of locations ?? []) {
-    entries.push(urlEntry(`${SITE_URL}/${canonicalPath(loc.slug)}`, loc.updated_at));
+    entries.push(urlEntry(`${SITE_URL}${escortsPath(loc.slug)}`, loc.updated_at));
   }
 
   // Areas
@@ -69,7 +79,7 @@ async function generate() {
   for (const area of areas ?? []) {
     const locSlug = area.location?.slug;
     if (!locSlug) continue;
-    entries.push(urlEntry(`${SITE_URL}/${canonicalPath(locSlug, area.slug)}`, area.updated_at));
+    entries.push(urlEntry(`${SITE_URL}${escortsPath(locSlug, area.slug)}`, area.updated_at));
   }
 
   // Models
@@ -82,7 +92,7 @@ async function generate() {
     const areaSlug = model.area?.slug;
     const locSlug = model.area?.location?.slug;
     if (!areaSlug || !locSlug) continue;
-    entries.push(urlEntry(`${SITE_URL}/${canonicalPath(locSlug, areaSlug, model.slug)}`, model.updated_at));
+    entries.push(urlEntry(`${SITE_URL}${escortsPath(locSlug, areaSlug, model.slug)}`, model.updated_at));
   }
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
